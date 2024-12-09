@@ -16,11 +16,10 @@ def parse_args() -> Args:
 
 
 if __name__ == "__main__":
-    # main()
 
     import sys
     from msa2vcf.object_classes import Args
-    from msa2vcf.msa2vcf_tools import MsaParser, Variant
+    from msa2vcf.msa2vcf_tools import MsaParser
 
     msa = "../data/Alignment_nt_All.fasta"
     odir = "work"
@@ -37,19 +36,15 @@ if __name__ == "__main__":
         sys.exit(1)
 
     msa_parser.parse_msa()
-    print(len(msa_parser.variants))
 
     variants = msa_parser.variants_clean()
-
-    print("OIN")
-    print(len(variants))
 
     total = 0
 
     for variant, list in sorted(variants.items(), key=lambda x: x[0].ref_pos):
-        # print(variant, len(list))
         total += len(list)
 
     msa_parser.write_vcf()
 
-    print("Total variants: ", total)
+    print("Total variants: ", len(variants))
+    print("Total alleles: ", total)
