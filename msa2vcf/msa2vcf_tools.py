@@ -460,7 +460,8 @@ class MsaParser:
             alt_no_n = re.sub(r"(N|-)+", "", variant.alt_base)
 
             alt_no_gap = re.sub(r"-+", "", variant.alt_base)
-            print(alt_no_n, variant.ref_base, variant.alt_base)
+
+            alt_freq = str(round(accessions / len(self.seqs), 2))
 
             if alt_no_n:
                 if not variant.ref_base == alt_no_n:
@@ -472,7 +473,7 @@ class MsaParser:
                             variant.ref_base,
                             alt_no_gap,
                             "PASS",
-                            "DP=1;AF=" + str(variant.alt_freq),
+                            "DP=1;AF=" + str(alt_freq),
                         ]
                     )
                 else:
@@ -489,7 +490,7 @@ class MsaParser:
                             alt_no_gap,
                             ".",
                             "PASS",
-                            "DP=1;AF=" + str(variant.alt_freq),
+                            "DP=1;AF=" + str(alt_freq),
                         ]
                     )
 
@@ -512,67 +513,3 @@ class MsaParser:
         with open(output_file, "w", encoding="utf-8") as f:
             for line in vcflines:
                 f.write(line + "\n")
-
-
-def make_vcf(snps: List[Variant], qname, rname, keep_n):
-
-    vcflines = []
-
-    # header
-    vcflines.append("##fileformat=VCFv4.2")
-    vcflines.append("##source=" + os.path.basename(sys.argv[0]))
-    vcflines.append("##contig=<ID=" + rname + ">")
-    vcflines.append('##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">')
-    vcflines.append('##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">')
-    vcflines.append("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\t" + qname)
-
-    # variants
-    for line in snps:
-        vcf_line = None
-
-        alt_no_n = re.sub(r"(N|-)+", "", line.alt_base)
-
-        alt_no_gap = re.sub(r"-+", "", line.alt_base)
-
-        if alt_no_n:
-            if not line.ref_base == alt_no_n:
-                vcf_line = "\t".join(
-                    [
-                        rname,
-                        str(line.ref_pos + 1),
-                        ".",
-                        line.ref_base,
-                        alt_no_gap,
-                        ".",
-                        "PASS",
-                        "DP=1;AF=" + str(line.alt_freq),
-                    ]
-                )
-
-        else:
-            if keep_n:
-                vcf_line = "\t".join(
-                    [
-                        rname,
-                        str(line.ref_pos + 1),
-                        ".",
-                        line.ref_base,
-                        alt_no_gap,
-                        ".",
-                        "PASS",
-                        "DP=1;AF=" + str(line.alt_freq),
-                    ]
-                )
-
-        if vcf_line:
-            vcflines.append(vcf_line)
-
-    return vcflines
-
-
-def write_vcf(vcflines, qname, odir="."):
-
-    output_file = os.path.join(odir, qname + ".vcf")
-    with open(output_file, "w", encoding="utf-8") as f:
-        for line in vcflines:
-            f.write(line + "\n")
