@@ -6,3 +6,4 @@ __pycache__/
 # 
 work/
 data/
+test_msa2vcf.ipynb
