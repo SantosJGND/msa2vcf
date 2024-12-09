@@ -461,7 +461,7 @@ class MsaParser:
 
             alt_no_gap = re.sub(r"-+", "", variant.alt_base)
 
-            alt_freq = str(round(accessions / len(self.seqs), 2))
+            alt_freq = str(round(len(accessions) / len(self.seqs), 2))
 
             if alt_no_n:
                 if not variant.ref_base == alt_no_n:

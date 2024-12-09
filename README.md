@@ -1,17 +1,14 @@
 # msa2vcf
 
-Turn a fasta-format MSA into one vcf per sequence.
+Turn a fasta-format MSA into a single VCF.
 
-`msa2vcf msa.fasta ref_name`
-
-## Install
-`pip install git+https://github.com/connor-lab/msa2vcf.git`
+This script is a development on the original msa2vcf.py script by the Connor lab, [here](github.com/connor-lab/msa2vcf.git).
 
 ## Notes
+
 VCF position is based on reference position.
 
 IUPAC bases:
-  - Ref base is stripped from list of potentials
-  - Variant AF is given as 1/IUPAC redundancy
-  
- Pretty much all Python stdlib and all that entails - no input checking, no brakes.
+
+- Ref base is stripped from list of potentials
+- Variant AF is given as 1/IUPAC redundancy
